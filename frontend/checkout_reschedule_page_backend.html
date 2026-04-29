@@ -1,0 +1,730 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Perfect Day Checkout</title>
+
+<style>
+:root{
+--bg:#f6fff8;
+--text:#18222d;
+--muted:#5f6b76;
+--green:#3ec46d;
+--green-dark:#1f9a4c;
+--blue:#3b82f6;
+--yellow:#ffd85a;
+--navy:#234863;
+--red:#ff6b57;
+--border:rgba(24,34,45,.08);
+--shadow:0 20px 50px rgba(22,38,28,.12);
+--maxw:1500px;
+}
+
+*{box-sizing:border-box}
+body{
+margin:0;
+font-family:Inter,system-ui,-apple-system;
+background:
+radial-gradient(circle at top left,rgba(62,196,109,.13),transparent 34%),
+radial-gradient(circle at bottom right,rgba(59,130,246,.12),transparent 30%),
+var(--bg);
+color:var(--text);
+}
+
+a{text-decoration:none;color:inherit}
+input,button,select,textarea{font:inherit}
+
+.topbar{
+background:#234863;
+box-shadow:0 8px 24px rgba(12,35,50,.12);
+}
+
+.nav{
+width:min(1260px,calc(100% - 30px));
+margin:auto;
+min-height:68px;
+display:flex;
+justify-content:space-between;
+align-items:center;
+gap:14px;
+}
+
+.brand{
+display:flex;
+align-items:center;
+gap:12px;
+font-weight:850;
+font-size:18px;
+white-space:nowrap;
+color:white;
+}
+
+.brand-badge{
+width:42px;
+height:42px;
+border-radius:14px;
+display:grid;
+place-items:center;
+background:linear-gradient(135deg,#5ed76f,#9bf07e);
+box-shadow:0 14px 28px rgba(62,196,109,.22);
+}
+
+.nav-links{
+display:flex;
+gap:8px;
+flex-wrap:wrap;
+}
+
+.nav-link{
+border:1px solid rgba(255,255,255,.18);
+background:rgba(255,255,255,.08);
+color:white;
+border-radius:999px;
+padding:9px 16px;
+font-size:14px;
+font-weight:760;
+}
+
+.nav-link.active{
+background:white;
+color:#173b53;
+}
+
+.checkout-page{
+width:min(var(--maxw),calc(100% - 36px));
+margin:auto;
+padding:40px 0 80px;
+}
+
+.page-title{
+margin:0 0 28px;
+font-size:1.6rem;
+color:#6b6f76;
+}
+
+.layout{
+display:grid;
+grid-template-columns:minmax(650px,1fr) 480px;
+gap:36px;
+}
+
+.section-title{
+margin:0 0 12px;
+font-size:1.08rem;
+font-weight:750;
+color:#6b6f76;
+}
+
+.card{
+background:white;
+border:1px solid var(--border);
+border-radius:20px;
+padding:20px;
+box-shadow:var(--shadow);
+margin-bottom:24px;
+}
+
+.form-grid{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:14px;
+}
+
+.field{
+display:grid;
+gap:7px;
+}
+
+.field.full{
+grid-column:1/-1;
+}
+
+label{
+font-size:.88rem;
+color:#6b6f76;
+}
+
+input,select,textarea{
+width:100%;
+border:1px solid rgba(24,34,45,.18);
+border-radius:8px;
+padding:12px;
+}
+
+.payment-row{
+display:grid;
+grid-template-columns:1fr 1fr 1fr;
+gap:14px;
+}
+
+.review-row{
+display:grid;
+grid-template-columns:1fr auto;
+gap:20px;
+padding:16px 0;
+border-bottom:1px solid rgba(0,0,0,.07);
+}
+
+.review-row:last-child{
+border-bottom:none;
+}
+
+.item-title{
+font-weight:800;
+color:var(--navy);
+margin-bottom:6px;
+}
+
+.item-meta{
+color:#5f6b76;
+font-size:.94rem;
+}
+
+.side{
+position:sticky;
+top:90px;
+}
+
+.search-more{
+width:100%;
+padding:13px;
+border-radius:10px;
+border:1px solid rgba(23,59,83,.35);
+background:white;
+font-weight:850;
+margin-bottom:20px;
+}
+
+.weather-box{
+background:linear-gradient(180deg,#ffe893,#ffd85a);
+border-radius:24px;
+padding:22px;
+box-shadow:0 18px 42px rgba(255,216,90,.22);
+margin-bottom:18px;
+}
+
+.weather-box h3{
+margin:0 0 8px;
+}
+
+.weather-box p{
+margin:0 0 16px;
+font-weight:650;
+}
+
+.guarantee-box{
+background:white;
+padding:16px;
+border-radius:18px;
+margin-bottom:14px;
+border:1px solid rgba(24,34,45,.08);
+display:flex;
+justify-content:space-between;
+align-items:center;
+gap:14px;
+}
+
+.guarantee-copy{
+font-size:.92rem;
+margin-top:6px;
+color:#5f6b76;
+}
+
+.guarantee-toggle{
+display:flex;
+align-items:center;
+gap:8px;
+cursor:pointer;
+font-weight:800;
+color:#173b53;
+}
+
+.guarantee-toggle input{
+width:20px;
+height:20px;
+accent-color:var(--green);
+cursor:pointer;
+}
+
+.btn{
+width:100%;
+border:none;
+border-radius:999px;
+padding:14px 20px;
+font-weight:850;
+cursor:pointer;
+}
+
+.btn-blue{
+background:linear-gradient(135deg,var(--blue),#5c9cff);
+color:white;
+}
+
+.btn-green{
+background:linear-gradient(135deg,var(--green),#70d97c);
+color:white;
+}
+
+.options-panel{
+display:none;
+background:white;
+border-radius:24px;
+padding:20px;
+box-shadow:var(--shadow);
+margin-bottom:18px;
+}
+
+.options-panel.show{
+display:block;
+}
+
+.option{
+border:1px solid rgba(24,34,45,.08);
+padding:15px;
+border-radius:18px;
+margin-bottom:12px;
+cursor:pointer;
+}
+
+.option.selected{
+border-color:rgba(62,196,109,.5);
+background:rgba(62,196,109,.08);
+}
+
+.option-meta{
+margin-top:6px;
+font-size:.9rem;
+color:#5f6b76;
+}
+
+.success{
+display:none;
+background:#dff8e6;
+padding:16px;
+border-radius:18px;
+font-weight:850;
+color:var(--green-dark);
+margin-bottom:18px;
+}
+
+.success.show{
+display:block;
+}
+
+.summary-card{
+background:white;
+border-radius:24px;
+padding:20px;
+box-shadow:var(--shadow);
+}
+
+.summary-row{
+display:flex;
+justify-content:space-between;
+padding:12px 0;
+border-bottom:1px solid rgba(0,0,0,.07);
+}
+
+.summary-row:last-child{
+border-bottom:none;
+}
+
+.summary-row.total{
+font-weight:900;
+font-size:1.08rem;
+}
+
+.purchase-btn{
+margin-top:16px;
+width:100%;
+padding:15px;
+border:none;
+border-radius:10px;
+background:linear-gradient(135deg,var(--green),#70d97c);
+color:white;
+font-weight:900;
+cursor:pointer;
+}
+
+@media(max-width:1180px){
+.layout{grid-template-columns:1fr}
+.side{position:static}
+}
+
+@media(max-width:760px){
+.form-grid,.payment-row{grid-template-columns:1fr}
+.nav{
+flex-direction:column;
+align-items:flex-start;
+padding:14px 0;
+}
+}
+</style>
+</head>
+
+<body>
+
+<header class="topbar">
+<nav class="nav">
+<div class="brand">
+<span class="brand-badge">🌦️</span>
+<span>Perfect Day Demo App</span>
+</div>
+
+<div class="nav-links">
+<a class="nav-link" href="index.html">Home</a>
+<a class="nav-link" href="tee_time_booking_page.html">Tee Times</a>
+<a class="nav-link active" href="checkout_reschedule_page_backend.html">Checkout</a>
+<a class="nav-link" href="manage_booking.html">Manage Booking</a>
+<a class="nav-link" href="dynamic_quote.html">Dynamic Quote</a>
+</div>
+</nav>
+</header>
+
+<main class="checkout-page">
+
+<h1 class="page-title">CHECKOUT</h1>
+
+<div class="layout">
+
+<section>
+
+<h2 class="section-title">Details</h2>
+
+<div class="card">
+<div class="form-grid">
+<div class="field">
+<label>First Name *</label>
+<input>
+</div>
+
+<div class="field">
+<label>Last Name *</label>
+<input>
+</div>
+
+<div class="field">
+<label>Email *</label>
+<input>
+</div>
+
+<div class="field">
+<label>Mobile *</label>
+<input value="+1">
+</div>
+</div>
+</div>
+
+<h2 class="section-title">Payment</h2>
+
+<div class="card">
+<div class="field full">
+<label>Credit Card *</label>
+<input>
+</div>
+
+<div class="payment-row">
+<div class="field">
+<label>Month</label>
+<select><option>04</option></select>
+</div>
+
+<div class="field">
+<label>Year</label>
+<select><option>2026</option></select>
+</div>
+
+<div class="field">
+<label>CVV</label>
+<input>
+</div>
+</div>
+
+<div class="field full">
+<label>Billing Address</label>
+<input>
+</div>
+</div>
+
+<h2 class="section-title">Review Items</h2>
+
+<div class="card">
+<div class="review-row">
+<div>
+<div class="item-title">Clearview Park Golf Course</div>
+<div class="item-meta" id="bookingTime">04/23/2026 6:21 PM</div>
+</div>
+<strong>$74</strong>
+</div>
+</div>
+
+<h2 class="section-title">Notes</h2>
+
+<div class="card">
+<textarea rows="4"></textarea>
+</div>
+
+</section>
+
+<aside class="side">
+
+<button class="search-more">
+SEARCH MORE TEE TIMES
+</button>
+
+<section class="weather-box">
+
+<div class="guarantee-box">
+<div>
+<strong>Perfect Day Guarantee</strong>
+<div class="guarantee-copy">
+Add weather protection for a full refund if rain impacts your selected round window.
+</div>
+</div>
+
+<label class="guarantee-toggle">
+<input type="checkbox" id="guaranteeToggle" checked>
+<span>Add $9</span>
+</label>
+</div>
+
+<h3 id="weatherHeadline">
+Checking live rain probability...
+</h3>
+
+<p>
+Would you like better rescheduling options?
+</p>
+
+<button class="btn btn-blue" id="seeOptions">
+See Options
+</button>
+
+</section>
+
+<section class="options-panel" id="optionsPanel">
+<h3>Suggested Times</h3>
+<p class="option-meta">Click “See Options” to pull live weather-ranked tee times.</p>
+</section>
+
+<div class="success" id="successBox">
+Reschedule applied successfully.
+</div>
+
+<section class="summary-card">
+
+<h3>Order Summary</h3>
+
+<div class="summary-row">
+<span>Tee Time</span>
+<strong id="summaryTime">6:21 PM</strong>
+</div>
+
+<div class="summary-row">
+<span>Rain Probability</span>
+<strong id="summaryRisk">Loading...</strong>
+</div>
+
+<div class="summary-row">
+<span>Greens Fees</span>
+<strong>$74</strong>
+</div>
+
+<div class="summary-row">
+<span>Reservation</span>
+<strong>$12</strong>
+</div>
+
+<div class="summary-row">
+<span>Weather Protection Guarantee</span>
+<strong id="guaranteePrice">$9</strong>
+</div>
+
+<div class="summary-row total">
+<span>Total</span>
+<strong id="totalPrice">$95</strong>
+</div>
+
+</section>
+
+<button class="purchase-btn">
+COMPLETE PURCHASE
+</button>
+
+</aside>
+
+</div>
+
+</main>
+
+<script>
+const BACKEND_URL="http://localhost:3001/api/weather-options";
+const selectedApiTime="2026-04-23T18:21";
+
+const seeOptions=document.getElementById("seeOptions");
+const panel=document.getElementById("optionsPanel");
+const success=document.getElementById("successBox");
+const summary=document.getElementById("summaryTime");
+const booking=document.getElementById("bookingTime");
+const guaranteeToggle=document.getElementById("guaranteeToggle");
+const guaranteePrice=document.getElementById("guaranteePrice");
+const totalPrice=document.getElementById("totalPrice");
+const summaryRisk=document.getElementById("summaryRisk");
+const weatherHeadline=document.getElementById("weatherHeadline");
+
+const greensFee=74;
+const reservationFee=12;
+const guaranteeFee=9;
+
+let selected="6:39 PM";
+let latestRecommendations=[];
+
+function updateTotal(){
+  const guaranteeAdded=guaranteeToggle.checked;
+  const total=greensFee+reservationFee+(guaranteeAdded ? guaranteeFee : 0);
+
+  guaranteePrice.innerText=guaranteeAdded ? "$"+guaranteeFee : "$0";
+  totalPrice.innerText="$"+total;
+}
+
+guaranteeToggle.addEventListener("change",updateTotal);
+updateTotal();
+
+function formatDisplayTime(apiTime){
+  const date=new Date(apiTime);
+
+  if(Number.isNaN(date.getTime())){
+    return apiTime;
+  }
+
+  return date.toLocaleTimeString([],{
+    hour:"numeric",
+    minute:"2-digit"
+  });
+}
+
+function fallbackWeatherData(){
+  return {
+    selected:{
+      rainProbability:51,
+      experienceScore:62
+    },
+    recommendations:[
+      {
+        teeTime:"2026-04-23T18:39",
+        rainProbability:12,
+        temperatureF:71,
+        windSpeed:8,
+        experienceScore:91,
+        label:"Best match"
+      },
+      {
+        teeTime:"2026-04-23T18:48",
+        rainProbability:16,
+        temperatureF:70,
+        windSpeed:9,
+        experienceScore:87,
+        label:"Good option"
+      },
+      {
+        teeTime:"2026-04-24T07:12",
+        rainProbability:8,
+        temperatureF:68,
+        windSpeed:6,
+        experienceScore:94,
+        label:"Lowest rain"
+      }
+    ]
+  };
+}
+
+async function getWeatherOptions(){
+  try{
+    const response=await fetch(`${BACKEND_URL}?selectedTime=${selectedApiTime}`);
+
+    if(!response.ok){
+      throw new Error("Backend returned error");
+    }
+
+    const data=await response.json();
+
+    if(!data.recommendations || data.recommendations.length===0){
+      return fallbackWeatherData();
+    }
+
+    return data;
+  }catch(error){
+    console.warn("Using fallback weather data:",error.message);
+    return fallbackWeatherData();
+  }
+}
+
+function renderOptions(recommendations){
+  if(!recommendations || recommendations.length===0){
+    recommendations=fallbackWeatherData().recommendations;
+  }
+
+  latestRecommendations=recommendations;
+
+  panel.classList.add("show");
+
+  panel.innerHTML=`
+    <h3>Suggested Times</h3>
+    <p class="option-meta">Ranked using weather data: rain probability, temperature, wind, and experience score.</p>
+
+    ${recommendations.map((option,index)=>`
+      <div class="option ${index===0 ? "selected" : ""}" data-index="${index}">
+        <strong>${formatDisplayTime(option.teeTime)} • Rain ${option.rainProbability}%</strong>
+        <div class="option-meta">
+          ${option.label || "Recommended"} · ${option.temperatureF}°F · Wind ${option.windSpeed} mph · Score ${option.experienceScore}/100
+        </div>
+      </div>
+    `).join("")}
+
+    <button class="btn btn-green" id="applyOption" type="button">
+      Apply Selected Time
+    </button>
+  `;
+
+  selected=formatDisplayTime(recommendations[0].teeTime);
+
+  document.querySelectorAll(".option").forEach(option=>{
+    option.onclick=()=>{
+      document.querySelectorAll(".option").forEach(x=>x.classList.remove("selected"));
+      option.classList.add("selected");
+
+      const chosen=latestRecommendations[Number(option.dataset.index)];
+      selected=formatDisplayTime(chosen.teeTime);
+    };
+  });
+
+  document.getElementById("applyOption").onclick=()=>{
+    summary.innerText=selected;
+    booking.innerText="04/23/2026 "+selected;
+    success.classList.add("show");
+  };
+}
+
+async function loadWeatherSummary(){
+  const data=await getWeatherOptions();
+
+  const rain=data.selected?.rainProbability ?? 51;
+  summaryRisk.innerText=rain+"%";
+  weatherHeadline.innerText=`${rain}% rain probability during your tee time.`;
+
+  return data;
+}
+
+seeOptions.onclick=async()=>{
+  panel.classList.add("show");
+  panel.innerHTML="<h3>Loading live weather-ranked options...</h3>";
+
+  const data=await loadWeatherSummary();
+  renderOptions(data.recommendations);
+};
+
+loadWeatherSummary();
+</script>
+</body>
+</html>

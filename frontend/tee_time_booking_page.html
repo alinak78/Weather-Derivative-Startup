@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Fairway Hills Tee Times</title>
+
+<style>
+:root{
+--bg:#f6fff8;
+--surface:#fff;
+--text:#18222d;
+--muted:#5f6b76;
+--green:#3ec46d;
+--green-dark:#1f9a4c;
+--blue:#3b82f6;
+--navy:#234863;
+--navy-dark:#102f43;
+--yellow:#ffd85a;
+--border:rgba(24,34,45,.08);
+--shadow:0 20px 50px rgba(22,38,28,.12);
+--maxw:1380px;
+}
+
+*{box-sizing:border-box;}
+
+body{
+margin:0;
+font-family:Inter,system-ui,-apple-system;
+color:var(--text);
+background:
+radial-gradient(circle at top left,rgba(62,196,109,.14),transparent 32%),
+radial-gradient(circle at bottom right,rgba(59,130,246,.12),transparent 30%),
+var(--bg);
+line-height:1.5;
+}
+
+a{text-decoration:none;color:inherit}
+button,input{font:inherit}
+
+/* NAVBAR */
+
+.topbar{
+background:#234863;
+box-shadow:0 8px 24px rgba(12,35,50,.12);
+}
+
+.nav{
+width:min(1260px,calc(100% - 30px));
+margin:auto;
+min-height:68px;
+display:flex;
+justify-content:space-between;
+align-items:center;
+gap:14px;
+}
+
+.brand{
+display:flex;
+align-items:center;
+gap:12px;
+font-weight:850;
+font-size:18px;
+white-space:nowrap;
+color:white;
+}
+
+.brand-badge{
+width:42px;
+height:42px;
+border-radius:14px;
+display:grid;
+place-items:center;
+background:linear-gradient(135deg,#5ed76f,#9bf07e);
+box-shadow:0 14px 28px rgba(62,196,109,.22);
+}
+
+.nav-links{
+display:flex;
+gap:8px;
+flex-wrap:wrap;
+}
+
+.nav-link{
+border:1px solid rgba(255,255,255,.18);
+background:rgba(255,255,255,.08);
+color:white;
+border-radius:999px;
+padding:9px 16px;
+font-size:14px;
+font-weight:760;
+}
+
+.nav-link.active{
+background:white;
+color:#173b53;
+}
+
+/* PAGE */
+
+.page{
+width:min(var(--maxw),calc(100% - 30px));
+margin:auto;
+padding:30px 0 80px;
+display:grid;
+grid-template-columns:320px 1fr;
+gap:28px;
+}
+
+.back-link{
+display:inline-flex;
+gap:12px;
+align-items:center;
+margin-bottom:28px;
+font-weight:600;
+color:var(--navy);
+}
+
+.back-link span:first-child{
+font-size:1.6rem;
+}
+
+.alert-card{
+background:var(--navy-dark);
+color:white;
+border-radius:18px;
+padding:28px;
+box-shadow:var(--shadow);
+margin-bottom:28px;
+}
+
+.alert-head{
+display:flex;
+gap:14px;
+align-items:center;
+font-weight:800;
+margin-bottom:18px;
+}
+
+.alert-icon{
+width:42px;
+height:42px;
+border-radius:50%;
+display:grid;
+place-items:center;
+background:rgba(255,255,255,.22);
+}
+
+.alert-card p{
+margin:0 0 70px;
+color:rgba(255,255,255,.88);
+}
+
+.btn{
+display:inline-flex;
+justify-content:center;
+align-items:center;
+border:none;
+cursor:pointer;
+font-weight:800;
+border-radius:10px;
+}
+
+.btn-white{
+width:100%;
+padding:13px 18px;
+background:white;
+}
+
+.btn-primary{
+padding:13px 26px;
+background:var(--navy);
+color:white;
+}
+
+.btn-outline{
+width:100%;
+padding:12px 18px;
+background:white;
+border:1.5px solid var(--navy);
+color:var(--navy);
+}
+
+.filters h2{
+margin:0;
+}
+
+.filter-title{
+display:flex;
+justify-content:space-between;
+margin-bottom:20px;
+}
+
+.reset-link{
+text-decoration:underline;
+font-size:.92rem;
+}
+
+.calendar{
+background:rgba(255,255,255,.64);
+border-radius:22px;
+padding:18px;
+box-shadow:0 12px 28px rgba(22,38,28,.06);
+}
+
+.calendar-head{
+display:grid;
+grid-template-columns:32px 1fr 32px;
+align-items:center;
+margin-bottom:18px;
+}
+
+.round-btn{
+border:none;
+background:var(--navy);
+color:white;
+width:32px;
+height:32px;
+border-radius:50%;
+}
+
+.month{
+text-align:center;
+font-weight:700;
+}
+
+.weekdays,.days{
+display:grid;
+grid-template-columns:repeat(7,1fr);
+gap:12px;
+text-align:center;
+}
+
+.weekdays{
+margin-bottom:14px;
+font-size:.86rem;
+color:var(--muted);
+}
+
+.days button{
+border:none;
+background:transparent;
+height:32px;
+border-radius:50%;
+cursor:pointer;
+}
+
+.days button.active{
+background:var(--navy);
+color:white;
+font-weight:800;
+}
+
+.content-header{
+display:grid;
+grid-template-columns:auto 1fr auto;
+gap:20px;
+align-items:start;
+margin-bottom:20px;
+}
+
+.collapse{
+width:50px;
+height:40px;
+border:none;
+border-radius:8px;
+background:var(--navy);
+color:white;
+}
+
+.course-title h1{
+margin:0 0 4px;
+font-size:1.55rem;
+}
+
+.promo{
+display:flex;
+gap:8px;
+}
+
+.promo input{
+height:38px;
+padding:0 12px;
+border-radius:8px;
+border:1px solid var(--border);
+}
+
+.info-box{
+background:var(--navy);
+color:white;
+border-radius:8px;
+padding:28px 36px;
+margin-bottom:24px;
+box-shadow:0 18px 42px rgba(23,59,83,.17);
+}
+
+.info-box p{
+margin:0 0 14px;
+}
+
+.times-grid{
+display:grid;
+grid-template-columns:repeat(3,1fr);
+gap:22px;
+padding:0 46px;
+}
+
+.tee-card{
+background:white;
+border:1px solid rgba(24,34,45,.14);
+border-radius:12px;
+padding:16px;
+box-shadow:0 8px 18px rgba(22,38,28,.13);
+cursor:pointer;
+}
+
+.tee-card.selected{
+border-color:rgba(62,196,109,.55);
+box-shadow:0 18px 38px rgba(62,196,109,.17);
+}
+
+.tee-top{
+display:flex;
+justify-content:space-between;
+margin-bottom:22px;
+}
+
+.tee-time{
+font-weight:800;
+}
+
+.tee-meta{
+font-size:.9rem;
+color:#6f6f6f;
+}
+
+.tee-body{
+text-align:center;
+margin-bottom:18px;
+}
+
+.price{
+font-size:1.3rem;
+font-weight:700;
+}
+
+.fee{
+color:#888;
+font-size:.82rem;
+}
+
+.selected-panel{
+margin:28px 46px 0;
+background:white;
+border-radius:22px;
+padding:22px;
+display:grid;
+grid-template-columns:1fr auto;
+gap:18px;
+align-items:center;
+box-shadow:var(--shadow);
+}
+
+.checkout-btn{
+padding:14px 28px;
+border-radius:999px;
+background:linear-gradient(135deg,var(--green),#70d97c);
+color:white;
+}
+
+@media(max-width:1100px){
+.page{
+grid-template-columns:1fr;
+}
+.times-grid{
+grid-template-columns:repeat(2,1fr);
+padding:0;
+}
+.selected-panel{
+margin:28px 0 0;
+}
+}
+
+@media(max-width:760px){
+.times-grid{
+grid-template-columns:1fr;
+}
+.selected-panel{
+grid-template-columns:1fr;
+}
+.nav{
+flex-direction:column;
+align-items:flex-start;
+padding:14px 0;
+}
+}
+</style>
+</head>
+<body>
+
+<header class="topbar">
+<nav class="nav">
+
+<div class="brand">
+<span class="brand-badge">🌦️</span>
+<span>Perfect Day Demo App</span>
+</div>
+
+<div class="nav-links">
+<a class="nav-link" href="index.html">Home</a>
+<a class="nav-link active" href="tee_time_booking_page.html">Tee Times</a>
+<a class="nav-link" href="checkout_reschedule_page_backend.html">Checkout</a>
+<a class="nav-link" href="manage_booking.html">Manage Booking</a>
+<a class="nav-link" href="dynamic_quote.html">Dynamic Quote</a>
+</div>
+
+</nav>
+</header>
+
+<main class="page">
+
+<aside>
+
+<a class="back-link" href="index.html">
+<span>←</span>
+<span>Back to Search Results</span>
+</a>
+
+<section class="alert-card">
+<div class="alert-head">
+<div class="alert-icon">☑</div>
+<div>Tee Time Alerts</div>
+</div>
+
+<p>
+Get notified when tee times become available.
+</p>
+
+<button class="btn btn-white">
+Set Alert
+</button>
+
+</section>
+
+<section class="filters">
+
+<div class="filter-title">
+<h2>Filters</h2>
+<a class="reset-link" href="#">Reset All</a>
+</div>
+
+<div class="calendar">
+
+<div class="calendar-head">
+<button class="round-btn">‹</button>
+<div class="month">
+April 2026
+</div>
+<button class="round-btn">›</button>
+</div>
+
+<div class="weekdays">
+<div>S</div><div>M</div><div>T</div>
+<div>W</div><div>T</div><div>F</div><div>S</div>
+</div>
+
+<div class="days">
+<button>20</button>
+<button>21</button>
+<button>22</button>
+<button class="active">23</button>
+<button>24</button>
+<button>25</button>
+<button>26</button>
+</div>
+
+</div>
+
+</section>
+
+</aside>
+
+
+<section>
+
+<div class="content-header">
+
+<button class="collapse">≪</button>
+
+<div class="course-title">
+<h1>Clearview Park Golf Course</h1>
+<p>Queens, NY</p>
+</div>
+
+<div class="promo">
+<input placeholder="Enter Promo">
+<button class="btn btn-primary">
+Apply
+</button>
+</div>
+
+</div>
+
+<section class="info-box">
+<p>Rental clubs and golf carts available.</p>
+<p>Credit card required to reserve.</p>
+<p>$5 reservation fee per player.</p>
+</section>
+
+
+<section class="times-grid">
+
+<article class="tee-card selected">
+<div class="tee-top">
+<div class="tee-time">6:21 PM</div>
+<div class="tee-meta">👥1-4</div>
+</div>
+
+<div class="tee-body">
+<div class="price">$43</div>
+<div class="fee">$37 + fee</div>
+</div>
+
+<button class="btn btn-outline">
+BOOK NOW
+</button>
+</article>
+
+
+<article class="tee-card">
+<div class="tee-top">
+<div class="tee-time">6:30 PM</div>
+<div class="tee-meta">👥1-4</div>
+</div>
+
+<div class="tee-body">
+<div class="price">$43</div>
+<div class="fee">$37 + fee</div>
+</div>
+
+<button class="btn btn-outline">
+BOOK NOW
+</button>
+</article>
+
+
+<article class="tee-card">
+<div class="tee-top">
+<div class="tee-time">6:39 PM</div>
+<div class="tee-meta">👥1-4</div>
+</div>
+
+<div class="tee-body">
+<div class="price">$43</div>
+<div class="fee">$37 + fee</div>
+</div>
+
+<button class="btn btn-outline">
+BOOK NOW
+</button>
+</article>
+
+</section>
+
+
+<section class="selected-panel">
+<div>
+<h3>Selected Tee Time: 6:21 PM</h3>
+<p>April 23 • 18 holes • Total $43</p>
+</div>
+
+<button
+class="btn checkout-btn"
+onclick="window.location.href='checkout_reschedule_page_backend.html'">
+Continue Booking
+</button>
+
+</section>
+
+</section>
+
+</main>
+
+</body>
+</html>

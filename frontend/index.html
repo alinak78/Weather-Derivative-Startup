@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Perfect Day Demo App</title>
+
+<style>
+:root{
+--bg:#f6fff8;
+--text:#18222d;
+--muted:#5f6b76;
+--green:#3ec46d;
+--green-dark:#1f9a4c;
+--blue:#3b82f6;
+--yellow:#ffd85a;
+--navy:#234863;
+--border:rgba(24,34,45,.08);
+--shadow:0 20px 50px rgba(22,38,28,.12);
+--maxw:1260px;
+}
+*{box-sizing:border-box}
+body{
+margin:0;
+font-family:Inter,system-ui,-apple-system;
+background:
+radial-gradient(circle at top left,rgba(62,196,109,.14),transparent 34%),
+radial-gradient(circle at bottom right,rgba(59,130,246,.10),transparent 30%),
+var(--bg);
+color:var(--text);
+}
+a{text-decoration:none;color:inherit}
+
+.topbar{
+background:#234863;
+box-shadow:0 8px 24px rgba(12,35,50,.12);
+}
+.nav{
+width:min(1260px,calc(100% - 30px));
+margin:auto;
+min-height:68px;
+display:flex;
+justify-content:space-between;
+align-items:center;
+gap:14px;
+}
+.brand{
+display:flex;
+align-items:center;
+gap:12px;
+font-weight:850;
+font-size:18px;
+color:white;
+}
+.brand-badge{
+width:42px;
+height:42px;
+border-radius:14px;
+display:grid;
+place-items:center;
+background:linear-gradient(135deg,#5ed76f,#9bf07e);
+}
+.nav-links{
+display:flex;
+gap:8px;
+flex-wrap:wrap;
+}
+.nav-link{
+border:1px solid rgba(255,255,255,.18);
+background:rgba(255,255,255,.08);
+color:white;
+border-radius:999px;
+padding:9px 16px;
+font-size:14px;
+font-weight:760;
+}
+.nav-link.active{
+background:white;
+color:#173b53;
+}
+
+.container{
+width:min(var(--maxw),calc(100% - 32px));
+margin:auto;
+padding:56px 0 90px;
+}
+
+.hero{
+display:grid;
+grid-template-columns:1.2fr .8fr;
+gap:34px;
+align-items:center;
+margin-bottom:42px;
+}
+
+.pill{
+display:inline-flex;
+padding:10px 14px;
+border-radius:999px;
+background:rgba(255,216,90,.28);
+font-weight:800;
+margin-bottom:18px;
+}
+
+h1{
+font-size:clamp(3rem,7vw,5.5rem);
+line-height:.95;
+margin:0 0 18px;
+letter-spacing:-.05em;
+}
+
+.lead{
+font-size:1.15rem;
+line-height:1.7;
+color:var(--muted);
+max-width:720px;
+}
+
+.hero-card{
+background:white;
+border-radius:32px;
+padding:30px;
+box-shadow:var(--shadow);
+border:1px solid var(--border);
+}
+
+.hero-metric{
+font-size:4rem;
+font-weight:950;
+line-height:1;
+color:var(--green-dark);
+margin:8px 0;
+}
+
+.hero-grid{
+display:grid;
+grid-template-columns:repeat(2,1fr);
+gap:16px;
+margin-top:20px;
+}
+
+.metric-box{
+background:#f8fbff;
+border-radius:20px;
+padding:18px;
+}
+
+.metric-box strong{
+font-size:1.7rem;
+display:block;
+margin-bottom:6px;
+}
+
+.card{
+background:white;
+border-radius:28px;
+padding:26px;
+box-shadow:var(--shadow);
+border:1px solid var(--border);
+}
+
+.section-title{
+font-size:2.2rem;
+margin:0 0 26px;
+}
+
+.grid3{
+display:grid;
+grid-template-columns:repeat(3,1fr);
+gap:22px;
+margin-bottom:34px;
+}
+
+.feature-icon{
+width:56px;
+height:56px;
+border-radius:18px;
+display:grid;
+place-items:center;
+font-size:24px;
+background:linear-gradient(135deg,#eafbf0,#d6f8e2);
+margin-bottom:18px;
+}
+
+.feature-card p{
+color:var(--muted);
+line-height:1.6;
+}
+
+.stats{
+display:grid;
+grid-template-columns:repeat(4,1fr);
+gap:18px;
+margin:32px 0;
+}
+
+.stat{
+background:white;
+border-radius:24px;
+padding:24px;
+box-shadow:var(--shadow);
+text-align:center;
+}
+
+.stat .num{
+font-size:3rem;
+font-weight:950;
+color:var(--navy);
+margin-bottom:8px;
+}
+
+.timeline{
+display:grid;
+grid-template-columns:repeat(4,1fr);
+gap:18px;
+}
+
+.step{
+background:white;
+border-radius:24px;
+padding:24px;
+box-shadow:var(--shadow);
+}
+
+.step-num{
+width:42px;
+height:42px;
+border-radius:50%;
+background:var(--green);
+color:white;
+display:grid;
+place-items:center;
+font-weight:900;
+margin-bottom:14px;
+}
+
+.demo-banner{
+margin-top:40px;
+background:linear-gradient(135deg,var(--navy),#2d5f83);
+color:white;
+border-radius:34px;
+padding:40px;
+display:grid;
+grid-template-columns:1fr auto;
+gap:24px;
+align-items:center;
+}
+
+.cta{
+display:inline-block;
+background:white;
+color:#173b53;
+padding:16px 30px;
+border-radius:999px;
+font-weight:850;
+}
+
+@media(max-width:1000px){
+.hero,.grid3,.stats,.timeline,.demo-banner{
+grid-template-columns:1fr;
+}
+.nav{
+flex-direction:column;
+align-items:flex-start;
+padding:14px 0;
+}
+}
+</style>
+</head>
+
+<body>
+
+<header class="topbar">
+<nav class="nav">
+
+<div class="brand">
+<span class="brand-badge">🌦️</span>
+<span>Perfect Day Demo App</span>
+</div>
+
+<div class="nav-links">
+<a class="nav-link active" href="index.html">Home</a>
+<a class="nav-link" href="tee_time_booking_page.html">Tee Times</a>
+<a class="nav-link" href="checkout_reschedule_page_backend.html">Checkout</a>
+<a class="nav-link" href="manage-booking.html">Manage Booking</a>
+<a class="nav-link" href="dynamic_quote.html">Dynamic Quote</a>
+</div>
+
+</nav>
+</header>
+
+
+<main class="container">
+
+<section class="hero">
+
+<div>
+<div class="pill">
+Experience Optimization, not Insurance
+</div>
+
+<h1>
+Turn risky bookings into better days.
+</h1>
+
+<p class="lead">
+Perfect Day embeds weather intelligence, smart rescheduling,
+and automated protection directly into golf and outdoor booking checkouts.
+Users don’t want refunds — they want the day to happen.
+</p>
+</div>
+
+
+<div class="hero-card">
+
+<div class="muted">
+Users preferring rescheduling over refund
+</div>
+
+<div class="hero-metric">
+78%
+</div>
+
+<p class="muted">
+Validated in user testing: customers prefer saving the experience over being reimbursed.
+</p>
+
+<div class="hero-grid">
+
+<div class="metric-box">
+<strong>39%</strong>
+Landing page CTR
+</div>
+
+<div class="metric-box">
+<strong>67%</strong>
+Booking intent conversion
+</div>
+
+<div class="metric-box">
+<strong>89%</strong>
+Willing to pay for protection
+</div>
+
+<div class="metric-box">
+<strong>15%+</strong>
+Target attach rate
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+
+
+<h2 class="section-title">
+How the product works
+</h2>
+
+<section class="grid3">
+
+<div class="card feature-card">
+<div class="feature-icon">📅</div>
+<h3>Weather-aware Booking</h3>
+<p>
+Show booking risk before checkout using real-time weather scoring.
+</p>
+</div>
+
+<div class="card feature-card">
+<div class="feature-icon">🔄</div>
+<h3>Smart Rescheduling</h3>
+<p>
+Recommend better tee times automatically when weather degrades.
+</p>
+</div>
+
+<div class="card feature-card">
+<div class="feature-icon">🛡️</div>
+<h3>Embedded Guarantee</h3>
+<p>
+Offer automated protection with refund or reschedule.
+</p>
+</div>
+
+</section>
+
+
+
+<h2 class="section-title">
+Signals from interviews
+</h2>
+
+<section class="stats">
+
+<div class="stat">
+<div class="num">37%</div>
+Lost deposits biggest pain
+</div>
+
+<div class="stat">
+<div class="num">33%</div>
+Coordination burden
+</div>
+
+<div class="stat">
+<div class="num">30%</div>
+Weather uncertainty
+</div>
+
+<div class="stat">
+<div class="num">$11–20</div>
+Typical WTP
+</div>
+
+</section>
+
+
+
+<h2 class="section-title">
+Aha moment at checkout
+</h2>
+
+<section class="timeline">
+
+<div class="step">
+<div class="step-num">1</div>
+<h3>Book Tee Time</h3>
+<p>Select a time.</p>
+</div>
+
+<div class="step">
+<div class="step-num">2</div>
+<h3>Detect Risk</h3>
+<p>System detects weather exposure.</p>
+</div>
+
+<div class="step">
+<div class="step-num">3</div>
+<h3>Offer Better Time</h3>
+<p>Recommend safer slots.</p>
+</div>
+
+<div class="step">
+<div class="step-num">4</div>
+<h3>Add Protection</h3>
+<p>Optional guarantee increases trust.</p>
+</div>
+
+</section>
+
+
+
+<section class="demo-banner">
+
+<div>
+<h2 style="margin:0 0 10px;">
+See the embedded checkout flow live
+</h2>
+
+<p style="margin:0;opacity:.88;">
+Prototype includes tee-time search,
+checkout recommendation,
+and post-booking management.
+</p>
+</div>
+
+<a class="cta" href="tee_time_booking_page.html">
+Launch Demo →
+</a>
+
+</section>
+
+</main>
+
+</body>
+</html>

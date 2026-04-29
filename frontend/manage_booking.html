@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Perfect Day Manage Booking</title>
+
+<style>
+:root{
+--bg:#f6fff8;
+--text:#18222d;
+--muted:#5f6b76;
+--green:#3ec46d;
+--green-dark:#1f9a4c;
+--blue:#3b82f6;
+--yellow:#ffd85a;
+--navy:#234863;
+--border:rgba(24,34,45,.08);
+--shadow:0 20px 50px rgba(22,38,28,.12);
+--maxw:1260px;
+}
+
+*{box-sizing:border-box}
+
+body{
+margin:0;
+font-family:Inter,system-ui,-apple-system;
+background:
+radial-gradient(circle at top left,rgba(62,196,109,.16),transparent 34%),
+radial-gradient(circle at bottom right,rgba(59,130,246,.12),transparent 30%),
+var(--bg);
+color:var(--text);
+}
+
+a{text-decoration:none;color:inherit}
+
+/* NAVBAR */
+
+.topbar{
+background:#234863;
+box-shadow:0 8px 24px rgba(12,35,50,.12);
+}
+
+.nav{
+width:min(1260px,calc(100% - 30px));
+margin:auto;
+min-height:68px;
+display:flex;
+justify-content:space-between;
+align-items:center;
+gap:14px;
+}
+
+.brand{
+display:flex;
+align-items:center;
+gap:12px;
+font-weight:850;
+font-size:18px;
+white-space:nowrap;
+color:white;
+}
+
+.brand-badge{
+width:42px;
+height:42px;
+border-radius:14px;
+display:grid;
+place-items:center;
+background:linear-gradient(135deg,#5ed76f,#9bf07e);
+box-shadow:0 14px 28px rgba(62,196,109,.22);
+}
+
+.nav-links{
+display:flex;
+gap:8px;
+flex-wrap:wrap;
+}
+
+.nav-link{
+border:1px solid rgba(255,255,255,.18);
+background:rgba(255,255,255,.08);
+color:white;
+border-radius:999px;
+padding:9px 16px;
+font-size:14px;
+font-weight:760;
+}
+
+.nav-link.active{
+background:white;
+color:#173b53;
+}
+
+/* PAGE */
+
+.container{
+width:min(var(--maxw),calc(100% - 32px));
+margin:auto;
+padding:48px 0 90px;
+}
+
+.hero{
+display:grid;
+grid-template-columns:1fr 420px;
+gap:28px;
+align-items:start;
+margin-bottom:26px;
+}
+
+.pill{
+display:inline-flex;
+padding:10px 14px;
+border-radius:999px;
+background:rgba(255,216,90,.28);
+font-weight:800;
+margin-bottom:16px;
+}
+
+h1{
+font-size:clamp(2.5rem,5vw,4.2rem);
+line-height:1;
+margin:0 0 16px;
+letter-spacing:-.045em;
+}
+
+.lead{
+font-size:1.08rem;
+line-height:1.6;
+color:var(--muted);
+max-width:720px;
+}
+
+.card{
+background:white;
+border-radius:28px;
+padding:26px;
+box-shadow:var(--shadow);
+border:1px solid var(--border);
+}
+
+.status-card{
+background:linear-gradient(135deg,var(--green),#70d97c);
+color:white;
+border-radius:28px;
+padding:26px;
+box-shadow:0 16px 34px rgba(62,196,109,.24);
+}
+
+.status-card h2{
+margin:0 0 8px;
+}
+
+.grid3{
+display:grid;
+grid-template-columns:repeat(3,1fr);
+gap:18px;
+margin-bottom:24px;
+}
+
+.metric{
+background:white;
+border-radius:24px;
+padding:22px;
+box-shadow:var(--shadow);
+border:1px solid var(--border);
+}
+
+.metric strong{
+display:block;
+font-size:1.8rem;
+margin-bottom:6px;
+}
+
+.muted{
+color:var(--muted);
+}
+
+.layout{
+display:grid;
+grid-template-columns:1fr 420px;
+gap:24px;
+align-items:start;
+}
+
+.row{
+display:flex;
+justify-content:space-between;
+gap:16px;
+padding:13px 0;
+border-bottom:1px solid rgba(0,0,0,.07);
+}
+
+.row:last-child{
+border-bottom:none;
+}
+
+.weather-chart{
+height:170px;
+border-radius:22px;
+background:
+linear-gradient(180deg,rgba(59,130,246,.12),transparent),
+repeating-linear-gradient(90deg,transparent 0,transparent 18%,rgba(24,34,45,.05) 18%,rgba(24,34,45,.05) 18.5%);
+display:flex;
+align-items:end;
+gap:12px;
+padding:18px;
+margin:18px 0;
+}
+
+.bar{
+flex:1;
+border-radius:12px 12px 6px 6px;
+min-height:18px;
+background:linear-gradient(180deg,#7eb4ff,var(--blue));
+}
+
+.bar.good{
+background:linear-gradient(180deg,#93e8a6,var(--green));
+}
+
+.bar.risk{
+background:linear-gradient(180deg,#ffe589,#ffc933);
+}
+
+.warning{
+background:linear-gradient(180deg,#ffe893,#ffd85a);
+border-radius:24px;
+padding:22px;
+box-shadow:0 18px 42px rgba(255,216,90,.22);
+margin-bottom:18px;
+}
+
+.warning h2{
+margin:0 0 8px;
+}
+
+.btn{
+width:100%;
+border:none;
+border-radius:999px;
+padding:14px 22px;
+font-weight:850;
+cursor:pointer;
+margin-top:12px;
+}
+
+.btn-blue{
+background:linear-gradient(135deg,var(--blue),#5c9cff);
+color:white;
+}
+
+.btn-green{
+background:linear-gradient(135deg,var(--green),#70d97c);
+color:white;
+}
+
+.btn-white{
+background:white;
+color:#173b53;
+border:1px solid var(--border);
+}
+
+.options{
+display:none;
+gap:12px;
+margin-top:18px;
+}
+
+.options.show{
+display:grid;
+}
+
+.option{
+background:white;
+border:1px solid rgba(24,34,45,.08);
+border-radius:18px;
+padding:16px;
+cursor:pointer;
+}
+
+.option.selected{
+background:rgba(62,196,109,.08);
+border-color:rgba(62,196,109,.45);
+}
+
+.success{
+display:none;
+background:#dff8e6;
+color:var(--green-dark);
+border-radius:18px;
+padding:16px;
+font-weight:850;
+margin-top:18px;
+}
+
+.success.show{
+display:block;
+}
+
+@media(max-width:1000px){
+.hero,.layout,.grid3{
+grid-template-columns:1fr;
+}
+
+.nav{
+flex-direction:column;
+align-items:flex-start;
+padding:14px 0;
+}
+}
+</style>
+</head>
+
+<body>
+
+<header class="topbar">
+<nav class="nav">
+
+<div class="brand">
+<span class="brand-badge">🌦️</span>
+<span>Perfect Day Demo App</span>
+</div>
+
+<div class="nav-links">
+<a class="nav-link" href="index.html">Home</a>
+<a class="nav-link" href="tee_time_booking_page.html">Tee Times</a>
+<a class="nav-link" href="checkout_reschedule_page_backend.html">Checkout</a>
+<a class="nav-link active" href="manage-booking.html">Manage Booking</a>
+<a class="nav-link" href="dynamic_quote.html">Dynamic Quote</a>
+</div>
+
+</nav>
+</header>
+
+
+<main class="container">
+
+<section class="hero">
+
+<div>
+<div class="pill">🌦 Post-booking protection</div>
+
+<h1>
+Manage your protected tee time.
+</h1>
+
+<p class="lead">
+This page shows what the customer sees after checkout.
+Perfect Day monitors weather during the full golf round window and helps the customer reschedule or request a refund if rain risk increases.
+</p>
+</div>
+
+<div class="status-card">
+<h2>You’re protected</h2>
+<p style="margin:0;">
+Clearview Park Golf Course<br>
+April 23, 2026 · 6:39 PM
+</p>
+</div>
+
+</section>
+
+
+<section class="grid3">
+
+<div class="metric">
+<strong>12%</strong>
+<span class="muted">Current rain probability</span>
+</div>
+
+<div class="metric">
+<strong>91/100</strong>
+<span class="muted">Experience score</span>
+</div>
+
+<div class="metric">
+<strong>Active</strong>
+<span class="muted">Guarantee status</span>
+</div>
+
+</section>
+
+
+<section class="layout">
+
+<div class="card">
+
+<h2>Live Weather Tracker</h2>
+<p class="muted">
+Your booking is monitored across the full playing window, not only the start time.
+</p>
+
+<div class="weather-chart">
+<div class="bar good" style="height:28%;"></div>
+<div class="bar good" style="height:34%;"></div>
+<div class="bar" style="height:42%;"></div>
+<div class="bar risk" style="height:62%;"></div>
+<div class="bar" style="height:38%;"></div>
+</div>
+
+<div class="row">
+<span>Course</span>
+<strong>Clearview Park Golf Course</strong>
+</div>
+
+<div class="row">
+<span>Current tee time</span>
+<strong id="currentTime">6:39 PM</strong>
+</div>
+
+<div class="row">
+<span>Protected window</span>
+<strong>6:39 PM – 10:39 PM</strong>
+</div>
+
+<div class="row">
+<span>Rain trigger</span>
+<strong>Any rain during round</strong>
+</div>
+
+<div class="row">
+<span>Eligible action</span>
+<strong>Reschedule or refund</strong>
+</div>
+
+</div>
+
+
+<aside>
+
+<div class="warning">
+<h2>Forecast update</h2>
+<p>
+Rain probability may increase during your round window. You can review safer tee times or keep the original booking protected.
+</p>
+
+<button class="btn btn-blue" id="showOptionsBtn">
+See Rescheduling Options
+</button>
+</div>
+
+
+<div class="card options" id="optionsBox">
+
+<h2>Recommended Alternatives</h2>
+
+<div class="option selected" data-time="Tomorrow · 7:12 AM">
+<strong>Tomorrow · 7:12 AM</strong>
+<div class="muted">Rain 8% · Experience score 94/100</div>
+</div>
+
+<div class="option" data-time="Tomorrow · 8:30 AM">
+<strong>Tomorrow · 8:30 AM</strong>
+<div class="muted">Rain 11% · Experience score 91/100</div>
+</div>
+
+<div class="option" data-time="Friday · 6:05 PM">
+<strong>Friday · 6:05 PM</strong>
+<div class="muted">Rain 9% · Experience score 93/100</div>
+</div>
+
+<button class="btn btn-green" id="confirmBtn">
+Confirm Reschedule
+</button>
+
+<button class="btn btn-white">
+Keep Original + Stay Protected
+</button>
+
+</div>
+
+
+<div class="success" id="successBox">
+Reschedule confirmed. Your new tee time is <span id="newTime">Tomorrow · 7:12 AM</span>.
+</div>
+
+</aside>
+
+</section>
+
+</main>
+
+
+<script>
+const showOptionsBtn=document.getElementById("showOptionsBtn");
+const optionsBox=document.getElementById("optionsBox");
+const confirmBtn=document.getElementById("confirmBtn");
+const successBox=document.getElementById("successBox");
+const options=document.querySelectorAll(".option");
+const newTime=document.getElementById("newTime");
+const currentTime=document.getElementById("currentTime");
+
+let selectedTime="Tomorrow · 7:12 AM";
+
+showOptionsBtn.onclick=()=>{
+optionsBox.classList.add("show");
+showOptionsBtn.textContent="Options Shown";
+};
+
+options.forEach(option=>{
+option.onclick=()=>{
+options.forEach(item=>item.classList.remove("selected"));
+option.classList.add("selected");
+selectedTime=option.dataset.time;
+};
+});
+
+confirmBtn.onclick=()=>{
+newTime.textContent=selectedTime;
+currentTime.textContent=selectedTime;
+successBox.classList.add("show");
+};
+</script>
+
+</body>
+</html>

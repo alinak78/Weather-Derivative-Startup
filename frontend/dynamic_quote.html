@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Perfect Day Dynamic Quote</title>
+
+<style>
+:root{
+--bg:#f6fff8;
+--text:#18222d;
+--muted:#5f6b76;
+--green:#3ec46d;
+--green-dark:#1f9a4c;
+--blue:#3b82f6;
+--yellow:#ffd85a;
+--navy:#234863;
+--border:rgba(24,34,45,.08);
+--shadow:0 20px 50px rgba(22,38,28,.12);
+--maxw:1260px;
+}
+
+*{box-sizing:border-box}
+
+body{
+margin:0;
+font-family:Inter,system-ui,-apple-system;
+background:
+radial-gradient(circle at top left,rgba(62,196,109,.16),transparent 34%),
+radial-gradient(circle at bottom right,rgba(59,130,246,.12),transparent 30%),
+var(--bg);
+color:var(--text);
+}
+
+a{text-decoration:none;color:inherit}
+
+/* NAVBAR */
+
+.topbar{
+background:#234863;
+box-shadow:0 8px 24px rgba(12,35,50,.12);
+}
+
+.nav{
+width:min(1260px,calc(100% - 30px));
+margin:auto;
+min-height:68px;
+display:flex;
+justify-content:space-between;
+align-items:center;
+gap:14px;
+}
+
+.brand{
+display:flex;
+align-items:center;
+gap:12px;
+font-weight:850;
+font-size:18px;
+white-space:nowrap;
+color:white;
+}
+
+.brand-badge{
+width:42px;
+height:42px;
+border-radius:14px;
+display:grid;
+place-items:center;
+background:linear-gradient(135deg,#5ed76f,#9bf07e);
+box-shadow:0 14px 28px rgba(62,196,109,.22);
+}
+
+.nav-links{
+display:flex;
+gap:8px;
+flex-wrap:wrap;
+}
+
+.nav-link{
+border:1px solid rgba(255,255,255,.18);
+background:rgba(255,255,255,.08);
+color:white;
+border-radius:999px;
+padding:9px 16px;
+font-size:14px;
+font-weight:760;
+}
+
+.nav-link.active{
+background:white;
+color:#173b53;
+}
+
+/* PAGE */
+
+.container{
+width:min(var(--maxw),calc(100% - 32px));
+margin:auto;
+padding:54px 0 90px;
+}
+
+.hero{
+display:grid;
+grid-template-columns:1fr 430px;
+gap:28px;
+align-items:start;
+margin-bottom:26px;
+}
+
+.pill{
+display:inline-flex;
+padding:10px 14px;
+border-radius:999px;
+background:rgba(255,216,90,.28);
+font-weight:800;
+margin-bottom:16px;
+}
+
+h1{
+font-size:clamp(2.5rem,5vw,4.2rem);
+line-height:1;
+margin:0 0 16px;
+letter-spacing:-.045em;
+}
+
+.lead{
+font-size:1.08rem;
+line-height:1.6;
+color:var(--muted);
+max-width:720px;
+}
+
+.card{
+background:white;
+border-radius:28px;
+padding:26px;
+box-shadow:var(--shadow);
+border:1px solid var(--border);
+}
+
+.quote-card{
+background:
+radial-gradient(circle at top right,rgba(62,196,109,.18),transparent 42%),
+white;
+}
+
+.badge{
+display:inline-flex;
+padding:8px 12px;
+border-radius:999px;
+background:rgba(59,130,246,.12);
+color:#1d5fcc;
+font-weight:850;
+font-size:.88rem;
+}
+
+.quote{
+font-size:clamp(4rem,8vw,6rem);
+font-weight:950;
+line-height:1;
+letter-spacing:-.06em;
+color:var(--green-dark);
+margin:18px 0 8px;
+}
+
+.range{
+width:100%;
+accent-color:var(--green);
+margin:20px 0;
+}
+
+.row{
+display:flex;
+justify-content:space-between;
+gap:16px;
+padding:13px 0;
+border-bottom:1px solid rgba(0,0,0,.07);
+}
+
+.row:last-child{
+border-bottom:none;
+}
+
+.btn{
+width:100%;
+border:none;
+border-radius:999px;
+padding:14px 22px;
+font-weight:850;
+cursor:pointer;
+margin-top:16px;
+}
+
+.btn-green{
+background:linear-gradient(135deg,var(--green),#70d97c);
+color:white;
+box-shadow:0 16px 34px rgba(62,196,109,.24);
+}
+
+.success{
+display:none;
+background:#dff8e6;
+color:var(--green-dark);
+border-radius:18px;
+padding:16px;
+font-weight:850;
+margin-top:16px;
+}
+
+.success.show{
+display:block;
+}
+
+.grid3{
+display:grid;
+grid-template-columns:repeat(3,1fr);
+gap:18px;
+margin-top:24px;
+}
+
+.metric{
+font-size:2.4rem;
+font-weight:950;
+line-height:1;
+margin:12px 0;
+}
+
+.muted{
+color:var(--muted);
+}
+
+.toggle{
+display:flex;
+gap:10px;
+margin-top:16px;
+}
+
+.toggle button{
+flex:1;
+border:none;
+border-radius:999px;
+padding:13px;
+font-weight:850;
+cursor:pointer;
+}
+
+.activeBtn{
+background:var(--blue);
+color:white;
+}
+
+.passiveBtn{
+background:#eef2f7;
+color:var(--text);
+}
+
+.bar{
+height:16px;
+background:#dfe8ef;
+border-radius:999px;
+overflow:hidden;
+margin-top:14px;
+}
+
+.fill{
+height:100%;
+width:61%;
+background:linear-gradient(90deg,var(--green),var(--blue));
+}
+
+.scenario{
+min-height:210px;
+display:grid;
+align-content:space-between;
+}
+
+.checkout-embed{
+border:1px solid rgba(24,34,45,.12);
+border-radius:20px;
+padding:18px;
+margin-top:14px;
+background:#fbfcfd;
+}
+
+@media(max-width:1000px){
+.hero,.grid3{
+grid-template-columns:1fr;
+}
+
+.nav{
+flex-direction:column;
+align-items:flex-start;
+padding:14px 0;
+}
+}
+</style>
+</head>
+
+<body>
+
+<header class="topbar">
+<nav class="nav">
+
+<div class="brand">
+<span class="brand-badge">🌦️</span>
+<span>Perfect Day Demo App</span>
+</div>
+
+<div class="nav-links">
+<a class="nav-link" href="index.html">Home</a>
+<a class="nav-link" href="tee_time_booking_page.html">Tee Times</a>
+<a class="nav-link" href="checkout_reschedule_page_backend.html">Checkout</a>
+<a class="nav-link" href="manage_booking.html">Manage Booking</a>
+<a class="nav-link active" href="dynamic_quote.html">Dynamic Quote</a>
+</div>
+
+</nav>
+</header>
+
+
+<main class="container">
+
+<section class="hero">
+
+<div>
+<div class="pill">🌦 Dynamic quote engine</div>
+
+<h1>
+Price the guarantee based on rain probability.
+</h1>
+
+<p class="lead">
+This page simulates how Perfect Day dynamically prices weather protection.
+As rain probability increases, the guarantee price, expected payout, merchant revenue,
+and margin update in real time.
+</p>
+
+<div class="grid3" style="margin-top:22px;">
+
+<div class="card">
+<strong>Booking value</strong>
+<div class="metric">$74</div>
+<p class="muted">Greens fees for two players.</p>
+</div>
+
+<div class="card">
+<strong>Refund trigger</strong>
+<div class="metric">Any rain</div>
+<p class="muted">During the full round window.</p>
+</div>
+
+<div class="card">
+<strong>Model output</strong>
+<div class="metric" id="modelOutput">$14</div>
+<p class="muted">Recommended guarantee price.</p>
+</div>
+
+</div>
+</div>
+
+
+<div class="card quote-card">
+
+<span class="badge">Interactive pricing model</span>
+
+<h2>Rain Probability</h2>
+
+<input
+id="risk"
+class="range"
+type="range"
+min="5"
+max="80"
+value="51">
+
+<div class="row">
+<span>Rain risk</span>
+<strong id="riskValue">51%</strong>
+</div>
+
+<div class="row">
+<span>Protection quote</span>
+<strong id="quoteValue">$14</strong>
+</div>
+
+<div class="row">
+<span>Expected refund payout</span>
+<strong id="payout">$7.14</strong>
+</div>
+
+<div class="row">
+<span>Suggested action</span>
+<strong id="suggestedAction">Reschedule first</strong>
+</div>
+
+<div class="quote" id="bigPrice">
+$14
+</div>
+
+<p class="muted">
+Recommended add-on price for a $74 golf booking with full refund eligibility if rain occurs during the round.
+</p>
+
+<button class="btn btn-green" id="addBtn">
+Add Perfect Day Guarantee
+</button>
+
+<div class="success" id="success">
+Guarantee added to checkout.
+</div>
+
+</div>
+
+</section>
+
+
+<section class="grid3">
+
+<div class="card">
+
+<h2>Reschedule vs Refund</h2>
+
+<div class="toggle">
+<button id="resBtn" class="activeBtn">
+Reschedule
+</button>
+
+<button id="refundBtn" class="passiveBtn">
+Refund
+</button>
+</div>
+
+<div style="margin-top:18px;">
+
+<div class="row">
+<span>Recommended action</span>
+<strong id="actionText">Reschedule</strong>
+</div>
+
+<div class="row">
+<span>Suggested tee time</span>
+<strong>6:48 PM</strong>
+</div>
+
+<div class="row">
+<span>Customer outcome</span>
+<strong>Better weather</strong>
+</div>
+
+</div>
+
+</div>
+
+
+<div class="card">
+
+<h2>Merchant Economics</h2>
+
+<div class="metric" id="attachRate">
+18%
+</div>
+
+<p class="muted">Estimated attach rate</p>
+
+<div class="bar">
+<div class="fill" id="attachFill"></div>
+</div>
+
+<div style="margin-top:16px;">
+
+<div class="row">
+<span>Revenue share</span>
+<strong id="merchantRev">$2.80</strong>
+</div>
+
+<div class="row">
+<span>Expected margin</span>
+<strong id="margin">61%</strong>
+</div>
+
+</div>
+
+</div>
+
+
+<div class="card">
+
+<h2>Willingness To Pay</h2>
+
+<input
+id="wtp"
+class="range"
+type="range"
+min="5"
+max="25"
+value="14">
+
+<div class="row">
+<span>User WTP</span>
+<strong id="wtpVal">$14</strong>
+</div>
+
+<div class="row">
+<span>Model quote</span>
+<strong id="modelQuote">Aligned</strong>
+</div>
+
+<div class="row">
+<span>Pricing signal</span>
+<strong id="pricingSignal">Good fit</strong>
+</div>
+
+</div>
+
+</section>
+
+
+<section class="grid3">
+
+<div class="card scenario">
+<div>
+<h2>Scenario A</h2>
+<p class="muted">Light rain risk</p>
+<div class="metric">9%</div>
+</div>
+<p>Guarantee price: <strong>$7</strong></p>
+</div>
+
+
+<div class="card scenario">
+<div>
+<h2>Scenario B</h2>
+<p class="muted">Storm-prone tee time</p>
+<div class="metric">67%</div>
+</div>
+<p>Guarantee price: <strong>$17</strong></p>
+</div>
+
+
+<div class="card scenario">
+<div>
+<h2>Checkout Embed</h2>
+<p class="muted">How the add-on appears inside partner checkout:</p>
+
+<div class="checkout-embed">
+<div class="row">
+<span>Weather Protection</span>
+<strong id="embedPrice">$14</strong>
+</div>
+<div class="row">
+<span>Rain trigger</span>
+<strong>Any rain</strong>
+</div>
+</div>
+</div>
+
+<a class="btn btn-green" href="checkout_reschedule_page_backend.html" style="text-align:center;">
+View Checkout
+</a>
+</div>
+
+</section>
+
+</main>
+
+
+<script>
+const risk=document.getElementById("risk");
+const riskValue=document.getElementById("riskValue");
+const quoteValue=document.getElementById("quoteValue");
+const bigPrice=document.getElementById("bigPrice");
+const payout=document.getElementById("payout");
+const attachRate=document.getElementById("attachRate");
+const merchantRev=document.getElementById("merchantRev");
+const margin=document.getElementById("margin");
+const attachFill=document.getElementById("attachFill");
+const modelOutput=document.getElementById("modelOutput");
+const embedPrice=document.getElementById("embedPrice");
+const suggestedAction=document.getElementById("suggestedAction");
+const wtp=document.getElementById("wtp");
+const wtpVal=document.getElementById("wtpVal");
+const modelQuote=document.getElementById("modelQuote");
+const pricingSignal=document.getElementById("pricingSignal");
+
+function updateQuote(){
+const r=Number(risk.value);
+const q=Math.round(6+r*.16);
+const expectedPayout=(q*(r/100)).toFixed(2);
+const attach=Math.round(10+r*.15);
+const marginVal=Math.max(25,Math.round(72-r*.18));
+const revenue=(q*.2).toFixed(2);
+
+riskValue.textContent=r+"%";
+quoteValue.textContent="$"+q;
+bigPrice.textContent="$"+q;
+modelOutput.textContent="$"+q;
+embedPrice.textContent="$"+q;
+payout.textContent="$"+expectedPayout;
+attachRate.textContent=attach+"%";
+merchantRev.textContent="$"+revenue;
+margin.textContent=marginVal+"%";
+attachFill.style.width=Math.min(100,attach*3)+"%";
+
+if(r>=45){
+suggestedAction.textContent="Reschedule first";
+} else {
+suggestedAction.textContent="Offer guarantee";
+}
+
+updateWtp();
+}
+
+function updateWtp(){
+const willingness=Number(wtp.value);
+const currentQuote=Number(bigPrice.textContent.replace("$",""));
+
+wtpVal.textContent="$"+willingness;
+
+if(Math.abs(willingness-currentQuote)<=2){
+modelQuote.textContent="Aligned";
+pricingSignal.textContent="Good fit";
+} else if(willingness<currentQuote){
+modelQuote.textContent="Too high";
+pricingSignal.textContent="Reduce price";
+} else {
+modelQuote.textContent="Underpriced";
+pricingSignal.textContent="Can charge more";
+}
+}
+
+risk.addEventListener("input",updateQuote);
+wtp.addEventListener("input",updateWtp);
+
+document.getElementById("addBtn").onclick=()=>{
+document.getElementById("success").classList.add("show");
+};
+
+const res=document.getElementById("resBtn");
+const refund=document.getElementById("refundBtn");
+const actionText=document.getElementById("actionText");
+
+res.onclick=()=>{
+res.className="activeBtn";
+refund.className="passiveBtn";
+actionText.textContent="Reschedule";
+};
+
+refund.onclick=()=>{
+refund.className="activeBtn";
+res.className="passiveBtn";
+actionText.textContent="Refund";
+};
+
+updateQuote();
+</script>
+
+</body>
+</html>

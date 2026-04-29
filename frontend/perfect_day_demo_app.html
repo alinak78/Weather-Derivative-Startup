@@ -1,0 +1,738 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Perfect Day Demo App</title>
+  <style>
+    :root {
+      --bg: #f6fff8;
+      --surface: #ffffff;
+      --text: #18222d;
+      --muted: #5f6b76;
+      --green: #3ec46d;
+      --green-dark: #1f9a4c;
+      --blue: #3b82f6;
+      --yellow: #ffd85a;
+      --red: #ff6b57;
+      --navy: #173b53;
+      --navy-dark: #102f43;
+      --border: rgba(24, 34, 45, 0.08);
+      --shadow: 0 20px 50px rgba(22, 38, 28, 0.12);
+      --maxw: 1240px;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at top left, rgba(62, 196, 109, 0.16), transparent 34%),
+        radial-gradient(circle at bottom right, rgba(59, 130, 246, 0.12), transparent 30%),
+        var(--bg);
+      line-height: 1.5;
+    }
+
+    a { color: inherit; text-decoration: none; }
+    button, input { font: inherit; }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      background: rgba(23, 59, 83, 0.96);
+      color: white;
+      backdrop-filter: blur(12px);
+      box-shadow: 0 8px 24px rgba(12, 35, 50, 0.12);
+    }
+
+    .nav {
+      width: min(var(--maxw), calc(100% - 28px));
+      margin: 0 auto;
+      min-height: 68px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-weight: 850;
+      letter-spacing: -0.01em;
+    }
+
+    .brand-badge {
+      width: 42px;
+      height: 42px;
+      border-radius: 14px;
+      display: grid;
+      place-items: center;
+      background: linear-gradient(135deg, var(--green), #8ae37d);
+      box-shadow: 0 14px 28px rgba(62,196,109,0.22);
+    }
+
+    .nav-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      justify-content: flex-end;
+    }
+
+    .nav-link {
+      border: 1px solid rgba(255,255,255,0.16);
+      background: rgba(255,255,255,0.08);
+      color: white;
+      border-radius: 999px;
+      padding: 9px 13px;
+      cursor: pointer;
+      font-weight: 750;
+      font-size: 0.88rem;
+    }
+
+    .nav-link.active {
+      background: white;
+      color: var(--navy);
+    }
+
+    .container {
+      width: min(var(--maxw), calc(100% - 32px));
+      margin: 0 auto;
+      padding: 42px 0 82px;
+    }
+
+    .page { display: none; }
+    .page.active { display: block; }
+
+    .hero {
+      display: grid;
+      grid-template-columns: 1.05fr 0.95fr;
+      gap: 24px;
+      align-items: center;
+      margin-bottom: 26px;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 14px;
+      border-radius: 999px;
+      background: rgba(255, 216, 90, 0.28);
+      color: #7c5a00;
+      font-weight: 850;
+      font-size: 0.9rem;
+      margin-bottom: 16px;
+    }
+
+    h1 {
+      margin: 0 0 14px;
+      font-size: clamp(2.35rem, 5vw, 4.2rem);
+      line-height: 0.98;
+      letter-spacing: -0.045em;
+    }
+
+    .lead {
+      margin: 0 0 22px;
+      color: var(--muted);
+      font-size: 1.08rem;
+      max-width: 700px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      border: none;
+      border-radius: 999px;
+      padding: 14px 22px;
+      cursor: pointer;
+      font-weight: 850;
+      transition: transform 0.18s ease, box-shadow 0.18s ease;
+    }
+
+    .btn:hover { transform: translateY(-1px); }
+
+    .btn-blue {
+      background: linear-gradient(135deg, var(--blue), #5c9cff);
+      color: white;
+      box-shadow: 0 16px 34px rgba(59, 130, 246, 0.25);
+    }
+
+    .btn-green {
+      background: linear-gradient(135deg, var(--green), #70d97c);
+      color: white;
+      box-shadow: 0 16px 34px rgba(62, 196, 109, 0.24);
+    }
+
+    .btn-white {
+      background: white;
+      color: var(--navy);
+      border: 1px solid var(--border);
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+    }
+
+    .card {
+      background: rgba(255,255,255,0.88);
+      border: 1px solid var(--border);
+      border-radius: 28px;
+      padding: 24px;
+      box-shadow: var(--shadow);
+    }
+
+    .card h2, .card h3 {
+      margin: 0 0 10px;
+      letter-spacing: -0.025em;
+    }
+
+    .muted { color: var(--muted); }
+    .small { font-size: 0.9rem; }
+
+    .metric-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-top: 18px;
+    }
+
+    .metric {
+      border-radius: 22px;
+      background: #fbfcfd;
+      border: 1px solid rgba(24,34,45,0.07);
+      padding: 16px;
+    }
+
+    .metric strong {
+      display: block;
+      font-size: 1.45rem;
+      margin-bottom: 4px;
+    }
+
+    .comparison {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-top: 18px;
+    }
+
+    .time-card {
+      border-radius: 24px;
+      padding: 20px;
+      border: 1px solid rgba(24,34,45,0.08);
+      background: #fbfcfd;
+    }
+
+    .time-card.bad {
+      background: linear-gradient(180deg, rgba(255,216,90,0.28), rgba(255,255,255,0.92));
+      border-color: rgba(255,216,90,0.4);
+    }
+
+    .time-card.good {
+      background: linear-gradient(180deg, rgba(62,196,109,0.16), rgba(255,255,255,0.92));
+      border-color: rgba(62,196,109,0.34);
+    }
+
+    .score-big {
+      font-size: 3.2rem;
+      line-height: 1;
+      font-weight: 900;
+      letter-spacing: -0.04em;
+      margin: 18px 0 6px;
+    }
+
+    .score-good { color: var(--green-dark); }
+    .score-bad { color: #7c5a00; }
+
+    .row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 11px 0;
+      border-bottom: 1px solid rgba(24,34,45,0.07);
+    }
+
+    .row:last-child { border-bottom: none; }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      border-radius: 999px;
+      padding: 7px 10px;
+      font-size: 0.82rem;
+      font-weight: 850;
+    }
+
+    .badge-green { background: rgba(62,196,109,0.14); color: var(--green-dark); }
+    .badge-yellow { background: rgba(255,216,90,0.32); color: #7c5a00; }
+    .badge-blue { background: rgba(59,130,246,0.12); color: #1d5fcc; }
+
+    .phone-frame {
+      width: min(340px, 100%);
+      min-height: 600px;
+      margin: 0 auto;
+      border-radius: 40px;
+      background: #111;
+      padding: 14px;
+      box-shadow: 0 26px 60px rgba(10,20,12,0.25);
+    }
+
+    .phone-screen {
+      background: white;
+      border-radius: 30px;
+      min-height: 572px;
+      padding: 22px;
+      display: grid;
+      gap: 14px;
+      align-content: start;
+    }
+
+    .weather-chart {
+      height: 150px;
+      border-radius: 22px;
+      background:
+        linear-gradient(180deg, rgba(59,130,246,0.12), transparent),
+        repeating-linear-gradient(90deg, transparent 0, transparent 18%, rgba(24,34,45,0.05) 18%, rgba(24,34,45,0.05) 18.5%);
+      display: flex;
+      align-items: end;
+      gap: 10px;
+      padding: 18px;
+    }
+
+    .bar {
+      flex: 1;
+      border-radius: 12px 12px 6px 6px;
+      min-height: 18px;
+      background: linear-gradient(180deg, #7eb4ff, var(--blue));
+    }
+
+    .bar.risk { background: linear-gradient(180deg, #ffe589, #ffc933); }
+    .bar.good { background: linear-gradient(180deg, #93e8a6, var(--green)); }
+
+    .status-banner {
+      border-radius: 24px;
+      padding: 20px;
+      color: white;
+      background: linear-gradient(135deg, var(--green), #70d97c);
+      box-shadow: 0 16px 34px rgba(62,196,109,0.24);
+    }
+
+    .warning-banner {
+      border-radius: 24px;
+      padding: 20px;
+      background: linear-gradient(180deg, #ffe893, #ffd85a);
+      color: #5f4700;
+      box-shadow: 0 18px 42px rgba(255,216,90,0.22);
+    }
+
+    .dashboard-shell {
+      display: grid;
+      grid-template-columns: 260px 1fr;
+      min-height: 650px;
+      border-radius: 32px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow);
+      background: white;
+    }
+
+    .sidebar {
+      background: var(--navy-dark);
+      color: white;
+      padding: 24px;
+    }
+
+    .side-item {
+      padding: 12px 14px;
+      border-radius: 14px;
+      margin-bottom: 8px;
+      color: rgba(255,255,255,0.78);
+      font-weight: 750;
+    }
+
+    .side-item.active {
+      background: rgba(255,255,255,0.12);
+      color: white;
+    }
+
+    .dash-main {
+      padding: 26px;
+      background: #fbfcfd;
+    }
+
+    .table {
+      width: 100%;
+      border-collapse: collapse;
+      background: white;
+      border-radius: 22px;
+      overflow: hidden;
+      border: 1px solid rgba(24,34,45,0.08);
+    }
+
+    .table th, .table td {
+      text-align: left;
+      padding: 15px;
+      border-bottom: 1px solid rgba(24,34,45,0.07);
+      font-size: 0.92rem;
+    }
+
+    .table th {
+      color: var(--muted);
+      font-weight: 850;
+      background: #f8fbfd;
+    }
+
+    .range-wrap {
+      background: white;
+      border-radius: 28px;
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow);
+      padding: 28px;
+    }
+
+    .range {
+      width: 100%;
+      accent-color: var(--green);
+    }
+
+    .quote-price {
+      font-size: clamp(3rem, 7vw, 5.8rem);
+      line-height: 1;
+      letter-spacing: -0.06em;
+      font-weight: 950;
+      color: var(--green-dark);
+      margin: 18px 0;
+    }
+
+    .timeline {
+      position: relative;
+      display: grid;
+      gap: 14px;
+      margin-top: 18px;
+    }
+
+    .timeline-step {
+      display: grid;
+      grid-template-columns: 44px 1fr;
+      gap: 14px;
+      align-items: start;
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 22px;
+      padding: 16px;
+    }
+
+    .dot {
+      width: 38px;
+      height: 38px;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      background: rgba(62,196,109,0.14);
+      color: var(--green-dark);
+      font-weight: 900;
+    }
+
+    .activity-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 18px;
+    }
+
+    .activity-card {
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 28px;
+      padding: 24px;
+      box-shadow: var(--shadow);
+      min-height: 180px;
+      display: grid;
+      align-content: space-between;
+    }
+
+    .activity-icon {
+      width: 54px;
+      height: 54px;
+      border-radius: 18px;
+      display: grid;
+      place-items: center;
+      background: rgba(59,130,246,0.12);
+      font-size: 1.7rem;
+    }
+
+    @media (max-width: 1000px) {
+      .hero, .grid-2, .grid-3, .comparison, .dashboard-shell, .activity-grid {
+        grid-template-columns: 1fr;
+      }
+      .metric-row { grid-template-columns: 1fr; }
+      .nav { align-items: flex-start; flex-direction: column; padding: 14px 0; }
+      .nav-links { justify-content: flex-start; }
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <nav class="nav">
+      <div class="brand"><span class="brand-badge">🌦️</span><span>Perfect Day Demo App</span></div>
+      <div class="nav-links">
+  <a href="tee_time_booking_page.html">Tee Times</a>
+  <a class="active" href="checkout_reschedule_page_backend.html">Checkout</a>
+  <a href="index.html">Product Demo</a>
+</div>
+    </nav>
+  </header>
+
+  <main class="container">
+    <section class="page active" id="recommendation">
+      <div class="hero">
+        <div>
+<div class="pill">🌦 Weather-smart checkout recommendation</div>          <h1>Move the customer from a risky tee time to a better day.</h1>
+          <p class="lead">This page is the live demo moment after the user clicks “See options” in checkout. It compares the selected tee time against better available inventory.</p>
+          <button class="btn btn-green" data-next="protected">Switch to Better Time</button>
+          <button class="btn btn-white" data-next="pricing">Keep Original + Add Guarantee</button>
+        </div>
+        <div class="card">
+          <h2>Optimization engine</h2>
+          <p class="muted">Scores each slot using rain probability, wind, temperature, and expected round quality.</p>
+          <div class="metric-row">
+            <div class="metric"><strong>51%</strong><span class="muted">Current rain risk</span></div>
+            <div class="metric"><strong>12%</strong><span class="muted">Recommended risk</span></div>
+            <div class="metric"><strong>+29</strong><span class="muted">Experience score lift</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="comparison">
+        <article class="time-card bad">
+          <span class="badge badge-yellow">Current tee time</span>
+          <h2>6:21 PM · April 23</h2>
+          <div class="score-big score-bad">62/100</div>
+          <p class="muted">Good price, poor weather window. Rain rises during the middle of the round.</p>
+          <div class="row"><span>Rain probability</span><strong>51%</strong></div>
+          <div class="row"><span>Wind</span><strong>High</strong></div>
+          <div class="row"><span>Temperature</span><strong>58°F</strong></div>
+          <div class="row"><span>Recommendation</span><strong>Do not keep</strong></div>
+        </article>
+
+        <article class="time-card good">
+          <span class="badge badge-green">Recommended alternative</span>
+          <h2>6:39 PM · April 23</h2>
+          <div class="score-big score-good">91/100</div>
+          <p class="muted">Better weather, same course, same day, still available in checkout.</p>
+          <div class="row"><span>Rain probability</span><strong>12%</strong></div>
+          <div class="row"><span>Wind</span><strong>Low</strong></div>
+          <div class="row"><span>Temperature</span><strong>71°F</strong></div>
+          <div class="row"><span>Recommendation</span><strong>Switch now</strong></div>
+        </article>
+      </div>
+    </section>
+
+    <section class="page" id="protected">
+      <div class="hero">
+        <div>
+          <div class="pill">Post-purchase dashboard</div>
+          <h1>Your round is protected and monitored automatically.</h1>
+          <p class="lead">After checkout, the user sees a simple dashboard confirming that Perfect Day is actively watching weather and can trigger rescheduling or refund rules.</p>
+          <button class="btn btn-blue" data-next="autoreschedule">Simulate forecast worsening</button>
+        </div>
+        <div class="phone-frame">
+          <div class="phone-screen">
+            <div class="status-banner">
+              <h2 style="margin:0 0 6px;">You’re all set 🎉</h2>
+              <div>Clearview Park · 6:39 PM · protected</div>
+            </div>
+            <div class="card" style="box-shadow:none; padding:16px;">
+              <h3>Live weather tracker</h3>
+              <div class="weather-chart">
+                <div class="bar good" style="height:32%;"></div>
+                <div class="bar good" style="height:28%;"></div>
+                <div class="bar" style="height:44%;"></div>
+                <div class="bar risk" style="height:62%;"></div>
+                <div class="bar" style="height:38%;"></div>
+              </div>
+            </div>
+            <div class="row"><span>Current risk</span><strong>12%</strong></div>
+            <div class="row"><span>Trigger threshold</span><strong>Any rain during round</strong></div>
+            <div class="row"><span>Action</span><strong>Auto-reschedule or refund</strong></div>
+            <button class="btn btn-green" data-next="operator">View operator impact</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="page" id="operator">
+      <div class="hero">
+        <div>
+          <div class="pill">B2B partner dashboard</div>
+          <h1>Operators see fewer calls, preserved revenue, and better utilization.</h1>
+          <p class="lead">This is the page that makes the product feel valuable to golf courses and booking platforms, not just consumers.</p>
+        </div>
+        <div class="grid-3">
+          <div class="metric"><strong>14</strong><span class="muted">At-risk bookings today</span></div>
+          <div class="metric"><strong>$1,240</strong><span class="muted">Revenue preserved</span></div>
+          <div class="metric"><strong>31</strong><span class="muted">Support calls avoided</span></div>
+        </div>
+      </div>
+
+      <div class="dashboard-shell">
+        <aside class="sidebar">
+          <h2 style="margin-top:0;">Fairway Hills Admin</h2>
+          <div class="side-item active">Weather Risk</div>
+          <div class="side-item">Bookings</div>
+          <div class="side-item">Revenue Share</div>
+          <div class="side-item">Pricing Rules</div>
+          <div class="side-item">Settings</div>
+        </aside>
+        <section class="dash-main">
+          <div class="grid-3" style="margin-bottom:18px;">
+            <div class="card" style="box-shadow:none;"><h3>Attach rate</h3><div class="score-big score-good">18%</div></div>
+            <div class="card" style="box-shadow:none;"><h3>Auto-shifted</h3><div class="score-big score-good">6</div></div>
+            <div class="card" style="box-shadow:none;"><h3>Refund exposure</h3><div class="score-big score-bad">↓42%</div></div>
+          </div>
+          <table class="table">
+            <thead><tr><th>Booking</th><th>Risk</th><th>Recommendation</th><th>Status</th></tr></thead>
+            <tbody>
+              <tr><td>6:21 PM · Clearview</td><td>51% rain</td><td>Move to 6:39 PM</td><td><span class="badge badge-green">Shifted</span></td></tr>
+              <tr><td>7:05 PM · Clearview</td><td>44% rain</td><td>Offer guarantee</td><td><span class="badge badge-yellow">Pending</span></td></tr>
+              <tr><td>8:10 AM · Forest Park</td><td>19% rain</td><td>No action</td><td><span class="badge badge-blue">Safe</span></td></tr>
+              <tr><td>3:30 PM · Marine Park</td><td>61% rain</td><td>Auto-reschedule</td><td><span class="badge badge-yellow">Review</span></td></tr>
+            </tbody>
+          </table>
+        </section>
+      </div>
+    </section>
+
+    <section class="page" id="pricing">
+      <div class="hero">
+        <div>
+          <div class="pill">Dynamic quote modal</div>
+          <h1>Explainable weather guarantee pricing.</h1>
+          <p class="lead">This page shows how the checkout add-on can price dynamically based on the probability of rain while staying simple for users.</p>
+        </div>
+        <div class="range-wrap">
+          <span class="badge badge-blue">Interactive pricing</span>
+          <h2>Rain probability</h2>
+          <input class="range" id="riskSlider" type="range" min="5" max="80" value="51" />
+          <div class="row"><span>Rain risk</span><strong id="riskLabel">51%</strong></div>
+          <div class="quote-price" id="quotePrice">$14</div>
+          <p class="muted">Recommended protection price for a $74 golf booking with full refund eligibility if rain occurs during the round window.</p>
+          <button class="btn btn-green" data-next="protected">Add Guarantee</button>
+        </div>
+      </div>
+
+      <div class="grid-3">
+        <div class="card"><h3>Low risk</h3><p class="muted">5–25% rain → light premium, mainly peace of mind.</p></div>
+        <div class="card"><h3>Moderate risk</h3><p class="muted">26–55% rain → strongest attach-rate opportunity.</p></div>
+        <div class="card"><h3>High risk</h3><p class="muted">56%+ rain → push rescheduling first, guarantee as fallback.</p></div>
+      </div>
+    </section>
+
+    <section class="page" id="autoreschedule">
+      <div class="hero">
+        <div>
+          <div class="pill">Autonomous rescheduling</div>
+          <h1>When the forecast worsens, the system acts before the customer complains.</h1>
+          <p class="lead">This page shows the “agentic” part of the product: monitor, detect, recommend, and execute the reschedule with one click.</p>
+          <button class="btn btn-green" id="confirmSwitchBtn">Accept new time</button>
+          <button class="btn btn-white">Keep original + stay protected</button>
+        </div>
+        <div class="warning-banner">
+          <h2 style="margin:0 0 8px;">Rain forecast increased</h2>
+          <p style="margin:0;">Your 6:39 PM tee time now has a 58% chance of rain. We found a safer available slot tomorrow morning.</p>
+        </div>
+      </div>
+
+      <div class="timeline">
+        <div class="timeline-step"><div class="dot">1</div><div><strong>Monitoring detected threshold breach</strong><div class="muted">Rain probability crossed the protected trigger window.</div></div></div>
+        <div class="timeline-step"><div class="dot">2</div><div><strong>Inventory checked automatically</strong><div class="muted">System found available tee time: April 24 · 7:12 AM.</div></div></div>
+        <div class="timeline-step"><div class="dot">3</div><div><strong>Customer receives one-click action</strong><div class="muted">Accept the new time, keep original, or request refund.</div></div></div>
+        <div class="timeline-step" id="confirmedStep" style="display:none;"><div class="dot">✓</div><div><strong>Reschedule confirmed</strong><div class="muted">Your booking is now April 24 · 7:12 AM. No support call required.</div></div></div>
+      </div>
+    </section>
+
+    <section class="page" id="scale">
+      <div class="hero">
+        <div>
+          <div class="pill">Expansion story</div>
+          <h1>Same checkout product, many weather-sensitive activities.</h1>
+          <p class="lead">Use this as the final demo page to show how the product scales beyond golf while preserving the same core flow.</p>
+        </div>
+      </div>
+
+      <div class="activity-grid">
+        <article class="activity-card"><div class="activity-icon">⛳</div><div><h2>Golf</h2><p class="muted">Rain, wind, heat, lightning.</p></div></article>
+        <article class="activity-card"><div class="activity-icon">🎿</div><div><h2>Skiing</h2><p class="muted">Snow quality, wind, cold, lift closures.</p></div></article>
+        <article class="activity-card"><div class="activity-icon">🎵</div><div><h2>Outdoor events</h2><p class="muted">Rain, storms, extreme heat.</p></div></article>
+        <article class="activity-card"><div class="activity-icon">⛵</div><div><h2>Boating</h2><p class="muted">Wind, storms, visibility, marine risk.</p></div></article>
+      </div>
+
+      <div class="card" style="margin-top:20px;">
+        <h2>API integration concept</h2>
+        <p class="muted">Booking platforms call the Perfect Day API at checkout: selected time → weather score → better alternatives → guarantee price → reschedule/refund automation.</p>
+        <div class="metric-row">
+          <div class="metric"><strong>/score</strong><span class="muted">Risk and experience score</span></div>
+          <div class="metric"><strong>/alternatives</strong><span class="muted">Better available slots</span></div>
+          <div class="metric"><strong>/guarantee</strong><span class="muted">Price and trigger terms</span></div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const navLinks = document.querySelectorAll('.nav-link');
+    const pages = document.querySelectorAll('.page');
+    const nextButtons = document.querySelectorAll('[data-next]');
+    const riskSlider = document.getElementById('riskSlider');
+    const riskLabel = document.getElementById('riskLabel');
+    const quotePrice = document.getElementById('quotePrice');
+    const confirmSwitchBtn = document.getElementById('confirmSwitchBtn');
+    const confirmedStep = document.getElementById('confirmedStep');
+
+    function showPage(id) {
+      pages.forEach(page => page.classList.toggle('active', page.id === id));
+      navLinks.forEach(link => link.classList.toggle('active', link.dataset.page === id));
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    navLinks.forEach(link => {
+      link.addEventListener('click', () => showPage(link.dataset.page));
+    });
+
+    nextButtons.forEach(button => {
+      button.addEventListener('click', () => showPage(button.dataset.next));
+    });
+
+    function updateQuote() {
+      const risk = Number(riskSlider.value);
+      const price = Math.round(6 + risk * 0.16);
+      riskLabel.textContent = `${risk}%`;
+      quotePrice.textContent = `$${price}`;
+    }
+
+    riskSlider.addEventListener('input', updateQuote);
+    updateQuote();
+
+    confirmSwitchBtn.addEventListener('click', () => {
+      confirmedStep.style.display = 'grid';
+      confirmSwitchBtn.textContent = 'Confirmed';
+    });
+  </script>
+</body>
+</html>
