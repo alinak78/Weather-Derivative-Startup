@@ -559,7 +559,10 @@ COMPLETE PURCHASE
 </main>
 
 <script>
-const BACKEND_URL="http://localhost:3001/api/weather-options";
+const BACKEND_URL =
+window.location.hostname === "localhost"
+ ? "http://localhost:3001/api/weather-options"
+ : "https://weather-derivative-startup.onrender.com/api/weather-options";
 const selectedApiTime="2026-04-23T18:21";
 
 const seeOptions=document.getElementById("seeOptions");
